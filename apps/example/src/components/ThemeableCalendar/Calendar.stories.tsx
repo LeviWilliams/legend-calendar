@@ -116,10 +116,10 @@ export const Circular = () => {
                     : "center",
                 justifyContent: "center",
                 backgroundColor:
-                  metadata.state === "active" ? "#fdeef2" : "transparent",
+                  metadata.state === "active" ? "#eef2fd" : "transparent",
               }),
               activeDayFiller: {
-                backgroundColor: "#fdeef2",
+                backgroundColor: "#eef2fd",
               },
             },
             itemDay: {
@@ -149,14 +149,14 @@ export const Circular = () => {
                 const isEdge = isStartOfRange || isEndOfRange;
                 return {
                   container: {
-                    backgroundColor: isEdge ? "#fd2a4f" : "#fdeef2",
+                    backgroundColor: isEdge ? "#2a74fd" : "#eef2fd",
                     borderRadius: isEdge ? 999 : 0,
                     width: isEdge ? 36 : "100%",
                     height: 36,
                     flex: isEdge ? 0 : 1,
                   },
                   content: {
-                    color: isEdge ? "#ffffff" : "#91505c",
+                    color: isEdge ? "#ffffff" : "#2a74fd",
                     fontWeight: isEdge ? "700" : "500",
                   },
                 };
@@ -165,10 +165,10 @@ export const Circular = () => {
                 container: {
                   borderRadius: 999,
                   borderWidth: 1,
-                  borderColor: "#fd2a4f",
+                  borderColor: "#2a74fd",
                 },
                 content: {
-                  color: "#fd2a4f",
+                  color: "#2a74fd",
                   fontWeight: "600",
                 },
               }),
