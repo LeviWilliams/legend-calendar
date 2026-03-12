@@ -2,7 +2,12 @@ import type {
   CalendarActiveDateRange,
   CalendarOnDayPress,
 } from "@lazerlen/legend-calendar";
-import { Calendar, fromDateId, toDateId, useDateRange } from "@lazerlen/legend-calendar";
+import {
+  Calendar,
+  fromDateId,
+  toDateId,
+  useDateRange,
+} from "@lazerlen/legend-calendar";
 import type { Meta } from "@storybook/react-native";
 import { add, sub } from "date-fns";
 import { format } from "date-fns/fp";
@@ -139,7 +144,7 @@ export const Circular = () => {
               }),
               active: ({ isStartOfRange, isEndOfRange }) => {
                 const isEdge = isStartOfRange || isEndOfRange;
-                
+
                 return {
                   container: {
                     backgroundColor: isEdge ? "#2a74fd" : "transparent",
