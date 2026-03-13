@@ -8,7 +8,12 @@ import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
-import { getWeekOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
+import {
+  fromDateId,
+  getWeekOfMonth,
+  startOfMonth,
+  toDateId,
+} from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 import { activeDateRangesStore } from "@/hooks/useOptimizedDayMetadata";
@@ -70,6 +75,20 @@ export interface CalendarListProps
   calendarInitialMonthId?: string;
 
   /**
+   * When enabled, automatically scrolls to the month containing the start date
+   * of the first active range on mount. Only applies when
+   * `calendarActiveDateRanges` has at least one range with a `startId`.
+   *
+   * Takes precedence over `calendarInitialMonthId` when enabled and a valid
+   * range exists.
+   *
+   * Uses `initialScrollIndex` internally, so scrolling only happens on mount.
+   *
+   * @defaultValue true
+   */
+  calendarInitialScrollToActiveRange?: boolean;
+
+  /**
    * Overwrites the default `Calendar` component.
    *
    * **Important**: when providing a custom implementation, make sure to
@@ -113,6 +132,7 @@ export function CalendarList({
   const {
     // List-related props
     calendarInitialMonthId,
+    calendarInitialScrollToActiveRange = true,
     calendarPastScrollRangeInMonths = 12,
     calendarFutureScrollRangeInMonths = 12,
     calendarFirstDayOfWeek = "sunday",
@@ -197,6 +217,25 @@ export function CalendarList({
     calendarMaxDateId,
     calendarMinDateId,
   });
+
+  // Compute the scroll index based on active date range if enabled
+  let computedInitialScrollIndex = initialMonthIndex;
+  if (calendarInitialScrollToActiveRange && calendarActiveDateRanges) {
+    const firstRange = calendarActiveDateRanges[0];
+    if (firstRange?.startId) {
+      // Convert the startId to the first day of that month
+      const startDate = fromDateId(firstRange.startId);
+      const monthId = toDateId(startOfMonth(startDate));
+
+      // Find the index of this month in the monthList
+      const monthIndex = monthList.findIndex((month) => month.id === monthId);
+
+      // Use this index if found, otherwise fall back to initialMonthIndex
+      if (monthIndex !== -1) {
+        computedInitialScrollIndex = monthIndex;
+      }
+    }
+  }
 
   const monthListWithCalendarProps = monthList.map((month) => ({
     ...month,
@@ -320,7 +359,7 @@ export function CalendarList({
       drawDistance={560}
       estimatedItemSize={273}
       getFixedItemSize={getFixedItemSize}
-      initialScrollIndex={initialMonthIndex}
+      initialScrollIndex={computedInitialScrollIndex}
       keyExtractor={keyExtractor}
       maintainVisibleContentPosition
       onEndReached={handleOnEndReached}
