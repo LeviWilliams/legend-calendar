@@ -249,6 +249,57 @@ export const DatePicker = () => {
   );
 };
 
+export function AutoScrollToActiveRange() {
+  const futureDate = addMonths(today, 6);
+  const futureDateEnd = addMonths(futureDate, 1);
+
+  return (
+    <VStack grow spacing={20}>
+      <Text>
+        This calendar has a date range 6 months in the future. It automatically
+        scrolls to show the active range on mount.
+      </Text>
+      <View style={{ flex: 1, width: "100%" }}>
+        <Calendar.List
+          calendarActiveDateRanges={[
+            {
+              startId: toDateId(futureDate),
+              endId: toDateId(futureDateEnd),
+            },
+          ]}
+          onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+        />
+      </View>
+    </VStack>
+  );
+}
+
+export function AutoScrollDisabled() {
+  const futureDate = addMonths(today, 6);
+  const futureDateEnd = addMonths(futureDate, 1);
+
+  return (
+    <VStack grow spacing={20}>
+      <Text>
+        This calendar has auto-scroll disabled. It opens at the current month
+        even though the active range is 6 months in the future.
+      </Text>
+      <View style={{ flex: 1, width: "100%" }}>
+        <Calendar.List
+          calendarActiveDateRanges={[
+            {
+              startId: toDateId(futureDate),
+              endId: toDateId(futureDateEnd),
+            },
+          ]}
+          calendarInitialScrollToActiveRange={false}
+          onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+        />
+      </View>
+    </VStack>
+  );
+}
+
 export const TwoCalendarListsMounted = () => {
   return (
     <VStack grow spacing={48}>

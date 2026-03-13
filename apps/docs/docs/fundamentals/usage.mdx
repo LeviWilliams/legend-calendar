@@ -139,6 +139,59 @@ export const CalendarListDateRange = () => {
 
 </HStack>
 
+## Auto-scroll to active date range
+
+By default, `Calendar.List` automatically scrolls to show the active date range when the component mounts. This is especially useful when you have a date range set to a month far in the future or past.
+
+The auto-scroll feature:
+- Scrolls to the month containing the **start date** of the first active range
+- Only happens on mount (uses `initialScrollIndex` internally)
+- Takes precedence over `calendarInitialMonthId` when enabled
+- Is enabled by default but can be disabled
+
+**Example with auto-scroll enabled (default):**
+
+```tsx
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
+import { addMonths } from "date-fns";
+
+const today = new Date();
+const futureDate = addMonths(today, 6);
+
+export const AutoScrollExample = () => {
+  return (
+    <Calendar.List
+      calendarActiveDateRanges={[
+        {
+          startId: toDateId(futureDate),
+          endId: toDateId(addMonths(futureDate, 1)),
+        },
+      ]}
+      // Auto-scrolls to show the future date range on mount
+    />
+  );
+};
+```
+
+**Disabling auto-scroll:**
+
+If you want to disable this behavior and use `calendarInitialMonthId` instead, set `calendarInitialScrollToActiveRange` to `false`:
+
+```tsx
+<Calendar.List
+  calendarActiveDateRanges={[
+    {
+      startId: "2025-06-15",
+      endId: "2025-06-20",
+    },
+  ]}
+  calendarInitialMonthId="2024-01-01"
+  // highlight-next-line
+  calendarInitialScrollToActiveRange={false}
+  // Will scroll to January 2024 instead of June 2025
+/>
+```
+
 ## Localization and date formatting
 
 Legend Calendar was built with a "bring your own date library" approach. This
