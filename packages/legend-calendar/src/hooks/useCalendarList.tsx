@@ -156,6 +156,9 @@ export const useCalendarList = ({
    * Append new months to the list.
    */
   const appendMonths = (numberOfMonths: number) => {
+    if (numberOfMonths <= 0) {
+      return monthList;
+    }
     // Last month + 1
     const startingMonth = addMonths(monthList[monthList.length - 1].date, 1);
 
@@ -188,6 +191,9 @@ export const useCalendarList = ({
   };
 
   const prependMonths = (numberOfMonths: number) => {
+    if (numberOfMonths <= 0) {
+      return monthList;
+    }
     const endingMonth = subMonths(monthList[0].date, 1);
 
     const startingMonth = getStartingMonth(
