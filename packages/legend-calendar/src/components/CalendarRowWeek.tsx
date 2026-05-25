@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { memo } from "react";
 import type { ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CalendarRowWeek = memo(function CalendarRowWeek({
+export const CalendarRowWeek = function CalendarRowWeek({
   children,
   spacing = 0,
   theme,
@@ -39,4 +38,4 @@ export const CalendarRowWeek = memo(function CalendarRowWeek({
       {children}
     </HStack>
   );
-});
+};

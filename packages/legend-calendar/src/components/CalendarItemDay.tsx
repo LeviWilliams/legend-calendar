@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { memo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -161,7 +160,7 @@ export interface CalendarItemDayProps {
  * `CalendarItemDayWithContainer`, since it also includes the spacing between
  * each day.
  */
-export const CalendarItemDay = memo(function CalendarItemDay({
+export const CalendarItemDay = function CalendarItemDay({
   onPress,
   children,
   theme,
@@ -295,7 +294,7 @@ export const CalendarItemDay = memo(function CalendarItemDay({
       }}
     </CalendarPressableComponent>
   );
-});
+};
 
 interface CalendarItemDayContainerTheme {
   /** An empty view that acts as a spacer between each day. The spacing is
@@ -331,7 +330,7 @@ export interface CalendarItemDayContainerProps {
   metadata?: CalendarDayMetadata;
 }
 
-export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
+export const CalendarItemDayContainer = function CalendarItemDayContainer({
   children,
   isStartOfWeek,
   shouldShowActiveDayFiller,
@@ -389,7 +388,7 @@ export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
       {children}
     </View>
   );
-});
+};
 
 export interface CalendarItemDayWithContainerProps
   extends Omit<CalendarItemDayProps, "height">,
@@ -409,7 +408,7 @@ export interface CalendarItemDayWithContainerProps
   calendarInstanceId?: string;
 }
 
-export const CalendarItemDayWithContainer = memo(
+export const CalendarItemDayWithContainer =
   function CalendarItemDayWithContainer({
     children,
     metadata: baseMetadata,
@@ -447,5 +446,4 @@ export const CalendarItemDayWithContainer = memo(
         </CalendarItemDay>
       </CalendarItemDayContainer>
     );
-  }
-);
+  };
