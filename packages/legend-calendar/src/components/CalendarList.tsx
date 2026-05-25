@@ -3,7 +3,7 @@ import {
   type LegendListProps,
   type LegendListRef,
 } from "@legendapp/list/react-native";
-import { useEffect, useImperativeHandle, useRef } from "react";
+import { useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
@@ -55,6 +55,49 @@ export type CalendarMonthEnhanced = CalendarMonth & {
 };
 
 const keyExtractor = (month: CalendarMonth) => month.id;
+
+function buildCalendarConfig(
+  calendarColorScheme: CalendarMonthEnhanced["calendarProps"]["calendarColorScheme"],
+  calendarDayHeight: number,
+  calendarDisabledDateIds: CalendarMonthEnhanced["calendarProps"]["calendarDisabledDateIds"],
+  calendarFirstDayOfWeek: CalendarMonthEnhanced["calendarProps"]["calendarFirstDayOfWeek"],
+  calendarFormatLocale: CalendarMonthEnhanced["calendarProps"]["calendarFormatLocale"],
+  calendarInstanceId: CalendarMonthEnhanced["calendarProps"]["calendarInstanceId"],
+  calendarMaxDateId: CalendarMonthEnhanced["calendarProps"]["calendarMaxDateId"],
+  calendarMinDateId: CalendarMonthEnhanced["calendarProps"]["calendarMinDateId"],
+  calendarMonthHeaderHeight: number,
+  calendarRowHorizontalSpacing: CalendarMonthEnhanced["calendarProps"]["calendarRowHorizontalSpacing"],
+  calendarRowVerticalSpacing: number,
+  calendarWeekHeaderHeightProp: CalendarMonthEnhanced["calendarProps"]["calendarWeekHeaderHeight"],
+  getCalendarDayFormat: CalendarMonthEnhanced["calendarProps"]["getCalendarDayFormat"],
+  getCalendarMonthFormat: CalendarMonthEnhanced["calendarProps"]["getCalendarMonthFormat"],
+  getCalendarWeekDayFormat: CalendarMonthEnhanced["calendarProps"]["getCalendarWeekDayFormat"],
+  onCalendarDayPress: CalendarMonthEnhanced["calendarProps"]["onCalendarDayPress"],
+  theme: CalendarMonthEnhanced["calendarProps"]["theme"],
+  CalendarPressableComponent: CalendarMonthEnhanced["calendarProps"]["CalendarPressableComponent"]
+): CalendarMonthEnhanced["calendarProps"] {
+  const calendarWeekHeaderHeight = calendarWeekHeaderHeightProp ?? calendarDayHeight;
+  return {
+    calendarColorScheme,
+    calendarDayHeight,
+    calendarDisabledDateIds,
+    calendarFirstDayOfWeek,
+    calendarFormatLocale,
+    calendarInstanceId,
+    calendarMaxDateId,
+    calendarMinDateId,
+    calendarMonthHeaderHeight,
+    calendarRowHorizontalSpacing,
+    calendarRowVerticalSpacing,
+    calendarWeekHeaderHeight,
+    getCalendarDayFormat,
+    getCalendarMonthFormat,
+    getCalendarWeekDayFormat,
+    onCalendarDayPress,
+    theme,
+    CalendarPressableComponent,
+  };
+}
 
 export interface CalendarListProps
   extends Omit<CalendarProps, "calendarMonthId">,
@@ -155,39 +198,36 @@ export interface CalendarListRef {
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
 
-export function CalendarList({
-  ref,
-  ...props
-}: CalendarListProps & { ref?: React.Ref<CalendarListRef> }) {
+type CalendarListInnerProps = CalendarListProps &
+  { ref?: React.Ref<CalendarListRef> } & {
+    flatListProps: Omit<
+      LegendListProps<CalendarMonthEnhanced>,
+      "renderItem" | "data" | "children"
+    >;
+  };
+
+export function CalendarList(
+  props: CalendarListProps & { ref?: React.Ref<CalendarListRef> }
+) {
   const {
-    // List-related props
+    ref,
     calendarInitialMonthId,
-    calendarInitialScrollToActiveRange = true,
-    calendarPastScrollRangeInMonths = 12,
-    calendarFutureScrollRangeInMonths = 12,
-    calendarFirstDayOfWeek = "sunday",
+    calendarInitialScrollToActiveRange,
+    calendarPastScrollRangeInMonths,
+    calendarFutureScrollRangeInMonths,
+    calendarFirstDayOfWeek,
     calendarFormatLocale,
-
-    // Spacings
-    calendarSpacing = 20,
+    calendarSpacing,
     calendarRowHorizontalSpacing,
-    calendarRowVerticalSpacing = 8,
-
-    // Heights
-    calendarMonthHeaderHeight = 20,
-    calendarDayHeight = 32,
-    calendarWeekHeaderHeight = calendarDayHeight,
-    calendarAdditionalHeight = 0,
-
-    // Other props
+    calendarRowVerticalSpacing,
+    calendarMonthHeaderHeight,
+    calendarDayHeight,
+    calendarWeekHeaderHeight,
+    calendarAdditionalHeight,
     calendarColorScheme,
     theme,
     onEndReached,
     onStartReached,
-    ...otherProps
-  } = props;
-
-  const {
     calendarActiveDateRanges,
     calendarDisabledDateIds,
     calendarInstanceId,
@@ -198,9 +238,82 @@ export function CalendarList({
     getCalendarWeekDayFormat,
     onCalendarDayPress,
     CalendarPressableComponent,
-    renderItem: customRenderItem,
+    renderItem,
     ...flatListProps
-  } = otherProps;
+  } = props;
+  return (
+    <CalendarListInner
+      ref={ref}
+      calendarInitialMonthId={calendarInitialMonthId}
+      calendarInitialScrollToActiveRange={calendarInitialScrollToActiveRange}
+      calendarPastScrollRangeInMonths={calendarPastScrollRangeInMonths}
+      calendarFutureScrollRangeInMonths={calendarFutureScrollRangeInMonths}
+      calendarFirstDayOfWeek={calendarFirstDayOfWeek}
+      calendarFormatLocale={calendarFormatLocale}
+      calendarSpacing={calendarSpacing}
+      calendarRowHorizontalSpacing={calendarRowHorizontalSpacing}
+      calendarRowVerticalSpacing={calendarRowVerticalSpacing}
+      calendarMonthHeaderHeight={calendarMonthHeaderHeight}
+      calendarDayHeight={calendarDayHeight}
+      calendarWeekHeaderHeight={calendarWeekHeaderHeight}
+      calendarAdditionalHeight={calendarAdditionalHeight}
+      calendarColorScheme={calendarColorScheme}
+      theme={theme}
+      onEndReached={onEndReached}
+      onStartReached={onStartReached}
+      calendarActiveDateRanges={calendarActiveDateRanges}
+      calendarDisabledDateIds={calendarDisabledDateIds}
+      calendarInstanceId={calendarInstanceId}
+      calendarMaxDateId={calendarMaxDateId}
+      calendarMinDateId={calendarMinDateId}
+      getCalendarDayFormat={getCalendarDayFormat}
+      getCalendarMonthFormat={getCalendarMonthFormat}
+      getCalendarWeekDayFormat={getCalendarWeekDayFormat}
+      onCalendarDayPress={onCalendarDayPress}
+      CalendarPressableComponent={CalendarPressableComponent}
+      renderItem={renderItem}
+      flatListProps={flatListProps}
+    />
+  );
+}
+
+function CalendarListInner({
+  ref,
+  // List-related props
+  calendarInitialMonthId,
+  calendarInitialScrollToActiveRange = true,
+  calendarPastScrollRangeInMonths = 12,
+  calendarFutureScrollRangeInMonths = 12,
+  calendarFirstDayOfWeek = "sunday",
+  calendarFormatLocale,
+  // Spacings
+  calendarSpacing = 20,
+  calendarRowHorizontalSpacing,
+  calendarRowVerticalSpacing = 8,
+  // Heights
+  calendarMonthHeaderHeight = 20,
+  calendarDayHeight = 32,
+  calendarWeekHeaderHeight: calendarWeekHeaderHeightProp,
+  calendarAdditionalHeight = 0,
+  // Other props
+  calendarColorScheme,
+  theme,
+  onEndReached,
+  onStartReached,
+  // Calendar config props
+  calendarActiveDateRanges,
+  calendarDisabledDateIds,
+  calendarInstanceId,
+  calendarMaxDateId,
+  calendarMinDateId,
+  getCalendarDayFormat,
+  getCalendarMonthFormat,
+  getCalendarWeekDayFormat,
+  onCalendarDayPress,
+  CalendarPressableComponent,
+  renderItem: customRenderItem,
+  flatListProps,
+}: CalendarListInnerProps) {
 
   // Write directly to store to bypass the entire render cascade.
   // This means calendarProps stays stable and monthListWithCalendarProps
@@ -212,27 +325,57 @@ export function CalendarList({
     );
   }, [calendarActiveDateRanges, calendarInstanceId]);
 
-  const calendarProps: CalendarMonthEnhanced["calendarProps"] = {
-    // calendarActiveDateRanges intentionally omitted - written to store above
-    calendarColorScheme,
-    calendarDayHeight,
-    calendarDisabledDateIds,
-    calendarFirstDayOfWeek,
-    calendarFormatLocale,
-    calendarInstanceId,
-    calendarMaxDateId,
-    calendarMinDateId,
-    calendarMonthHeaderHeight,
-    calendarRowHorizontalSpacing,
-    calendarRowVerticalSpacing,
-    calendarWeekHeaderHeight,
-    getCalendarDayFormat,
-    getCalendarMonthFormat,
-    getCalendarWeekDayFormat,
-    onCalendarDayPress,
-    theme,
-    CalendarPressableComponent,
-  };
+  // calendarActiveDateRanges intentionally omitted - written to store above.
+  // useMemo is required here: the React Compiler cannot cache the result of
+  // buildCalendarConfig because all its arguments flow through `tN === undefined
+  // ? default : tN` conditional expressions (the compiler's own pattern for
+  // defaulted props), which block cache slot generation.
+  // eslint-disable-next-line react-compiler/react-compiler
+  const calendarProps = useMemo(
+    () =>
+      buildCalendarConfig(
+        calendarColorScheme,
+        calendarDayHeight,
+        calendarDisabledDateIds,
+        calendarFirstDayOfWeek,
+        calendarFormatLocale,
+        calendarInstanceId,
+        calendarMaxDateId,
+        calendarMinDateId,
+        calendarMonthHeaderHeight,
+        calendarRowHorizontalSpacing,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeightProp,
+        getCalendarDayFormat,
+        getCalendarMonthFormat,
+        getCalendarWeekDayFormat,
+        onCalendarDayPress,
+        theme,
+        CalendarPressableComponent
+      ),
+    [
+      calendarColorScheme,
+      calendarDayHeight,
+      calendarDisabledDateIds,
+      calendarFirstDayOfWeek,
+      calendarFormatLocale,
+      calendarInstanceId,
+      calendarMaxDateId,
+      calendarMinDateId,
+      calendarMonthHeaderHeight,
+      calendarRowHorizontalSpacing,
+      calendarRowVerticalSpacing,
+      calendarWeekHeaderHeightProp,
+      getCalendarDayFormat,
+      getCalendarMonthFormat,
+      getCalendarWeekDayFormat,
+      onCalendarDayPress,
+      theme,
+      CalendarPressableComponent,
+    ]
+  );
+
+  const calendarWeekHeaderHeight = calendarWeekHeaderHeightProp ?? calendarDayHeight;
 
   const {
     initialMonthIndex,
@@ -249,24 +392,23 @@ export function CalendarList({
     calendarMinDateId,
   });
 
-  // Compute the scroll index based on active date range if enabled
-  let computedInitialScrollIndex = initialMonthIndex;
-  if (calendarInitialScrollToActiveRange && calendarActiveDateRanges) {
-    const firstRange = calendarActiveDateRanges[0];
-    if (firstRange?.startId) {
-      // Convert the startId to the first day of that month
-      const startDate = fromDateId(firstRange.startId);
-      const monthId = toDateId(startOfMonth(startDate));
-
-      // Find the index of this month in the monthList
-      const monthIndex = monthList.findIndex((month) => month.id === monthId);
-
-      // Use this index if found, otherwise fall back to initialMonthIndex
-      if (monthIndex !== -1) {
-        computedInitialScrollIndex = monthIndex;
+  // Frozen after mount — initialScrollIndex must not change after first render
+  // or LegendList re-renders its entire inner tree on every update.
+  // useState initializer runs exactly once on mount.
+  const [computedInitialScrollIndex] = useState(() => {
+    if (calendarInitialScrollToActiveRange && calendarActiveDateRanges) {
+      const firstRange = calendarActiveDateRanges[0];
+      if (firstRange?.startId) {
+        const startDate = fromDateId(firstRange.startId);
+        const monthId = toDateId(startOfMonth(startDate));
+        const monthIndex = monthList.findIndex((month) => month.id === monthId);
+        if (monthIndex !== -1) {
+          return monthIndex;
+        }
       }
     }
-  }
+    return initialMonthIndex;
+  });
 
   // Only build the enhanced list when user provides a custom renderItem
   // (backwards-compat path). Otherwise use plain monthList so the data
