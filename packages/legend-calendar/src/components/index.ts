@@ -43,6 +43,10 @@ export type {
   CalendarListRef,
   CalendarMonthEnhanced,
 } from "@/components/CalendarList";
+export {
+  useCalendarListConfig,
+  type CalendarListConfig,
+} from "@/components/CalendarListConfigContext";
 export type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
 export type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
 export type { HStackProps } from "@/components/HStack";

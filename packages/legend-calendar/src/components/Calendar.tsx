@@ -1,6 +1,7 @@
-import { memo, useEffect } from "react";
+import { useEffect } from "react";
 import type { ColorSchemeName, PressableProps } from "react-native";
 
+import { useCalendarListConfig } from "@/components/CalendarListConfigContext";
 import type {
   CalendarItemDayContainerProps,
   CalendarItemDayProps,
@@ -105,7 +106,7 @@ export interface CalendarProps extends UseCalendarParams {
   CalendarPressableComponent?: PressableLike;
 }
 
-const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
+const BaseCalendar = function BaseCalendar(props: CalendarProps) {
   const {
     calendarInstanceId,
     calendarRowVerticalSpacing = 8,
@@ -185,16 +186,23 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
       ))}
     </VStack>
   );
-});
+};
 
-export const Calendar = memo(function Calendar(props: CalendarProps) {
+export const Calendar = function Calendar(props: CalendarProps) {
+  const listConfig = useCalendarListConfig();
+
+  // When inside CalendarList, merge context values as defaults.
+  // Direct props always take precedence over context.
+  const resolvedProps = listConfig ? { ...listConfig, ...props } : props;
+
   const {
     calendarInstanceId,
     calendarActiveDateRanges,
     calendarMonthId,
     calendarColorScheme,
     ...otherProps
-  } = props;
+  } = resolvedProps;
+
   useEffect(() => {
     // When used inside CalendarList, calendarActiveDateRanges is undefined
     // because CalendarList writes directly to the store. Skip to avoid
@@ -225,4 +233,4 @@ export const Calendar = memo(function Calendar(props: CalendarProps) {
       />
     </CalendarThemeProvider>
   );
-});
+};

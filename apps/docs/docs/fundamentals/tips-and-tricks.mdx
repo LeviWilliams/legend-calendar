@@ -167,6 +167,40 @@ user system's theme.
 support dynamic themes that react to the user's system preferences. The prop is
 provided as an escape hatch for apps that doesn't support dynamic themes yet.
 
+## Custom `renderItem` performance
+
+When using a custom `renderItem` with `Calendar.List`, avoid spreading `item.calendarProps` into your component:
+
+```tsx
+// ❌ Slower: forces Calendar.List to build a new data array every render,
+// which gives LegendList a new `data` reference and re-diffs all items.
+<Calendar.List
+  renderItem={({ item }) => (
+    <MyCalendar calendarMonthId={item.id} {...item.calendarProps} />
+  )}
+/>
+```
+
+Instead, read the shared config directly from context inside your custom component using `useCalendarListConfig`:
+
+```tsx
+// ✅ Faster: data array is stable, LegendList only re-renders items
+// whose calendarMonthId actually changed (recycle/scroll).
+import { useCalendarListConfig } from "@lazerlen/legend-calendar";
+
+function MyCalendar(props: { calendarMonthId: string }) {
+  const listConfig = useCalendarListConfig();
+  const resolvedProps = listConfig ? { ...listConfig, ...props } : props;
+  // use resolvedProps...
+}
+
+<Calendar.List
+  renderItem={({ item }) => <MyCalendar calendarMonthId={item.id} />}
+/>
+```
+
+`useCalendarListConfig` returns `null` when used outside of a `Calendar.List`, so the pattern is safe to use in components that can appear in both contexts.
+
 ## Listening to the visible months
 
 You can listen to which months are currently visible by hooking into the [`onViewableItemsChange`](https://shopify.github.io/flash-list/docs/usage#onviewableitemschanged) prop:
