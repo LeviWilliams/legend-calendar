@@ -251,36 +251,36 @@ export function CalendarList(
   } = props;
   return (
     <CalendarListInner
-      ref={ref}
-      calendarInitialMonthId={calendarInitialMonthId}
-      calendarInitialScrollToActiveRange={calendarInitialScrollToActiveRange}
-      calendarPastScrollRangeInMonths={calendarPastScrollRangeInMonths}
-      calendarFutureScrollRangeInMonths={calendarFutureScrollRangeInMonths}
-      calendarFirstDayOfWeek={calendarFirstDayOfWeek}
-      calendarFormatLocale={calendarFormatLocale}
-      calendarSpacing={calendarSpacing}
-      calendarRowHorizontalSpacing={calendarRowHorizontalSpacing}
-      calendarRowVerticalSpacing={calendarRowVerticalSpacing}
-      calendarMonthHeaderHeight={calendarMonthHeaderHeight}
-      calendarDayHeight={calendarDayHeight}
-      calendarWeekHeaderHeight={calendarWeekHeaderHeight}
+      CalendarPressableComponent={CalendarPressableComponent}
+      calendarActiveDateRanges={calendarActiveDateRanges}
       calendarAdditionalHeight={calendarAdditionalHeight}
       calendarColorScheme={calendarColorScheme}
-      theme={theme}
-      onEndReached={onEndReached}
-      onStartReached={onStartReached}
-      calendarActiveDateRanges={calendarActiveDateRanges}
+      calendarDayHeight={calendarDayHeight}
       calendarDisabledDateIds={calendarDisabledDateIds}
+      calendarFirstDayOfWeek={calendarFirstDayOfWeek}
+      calendarFormatLocale={calendarFormatLocale}
+      calendarFutureScrollRangeInMonths={calendarFutureScrollRangeInMonths}
+      calendarInitialMonthId={calendarInitialMonthId}
+      calendarInitialScrollToActiveRange={calendarInitialScrollToActiveRange}
       calendarInstanceId={calendarInstanceId}
       calendarMaxDateId={calendarMaxDateId}
       calendarMinDateId={calendarMinDateId}
+      calendarMonthHeaderHeight={calendarMonthHeaderHeight}
+      calendarPastScrollRangeInMonths={calendarPastScrollRangeInMonths}
+      calendarRowHorizontalSpacing={calendarRowHorizontalSpacing}
+      calendarRowVerticalSpacing={calendarRowVerticalSpacing}
+      calendarSpacing={calendarSpacing}
+      calendarWeekHeaderHeight={calendarWeekHeaderHeight}
+      flatListProps={flatListProps}
       getCalendarDayFormat={getCalendarDayFormat}
       getCalendarMonthFormat={getCalendarMonthFormat}
       getCalendarWeekDayFormat={getCalendarWeekDayFormat}
       onCalendarDayPress={onCalendarDayPress}
-      CalendarPressableComponent={CalendarPressableComponent}
+      onEndReached={onEndReached}
+      onStartReached={onStartReached}
+      ref={ref}
       renderItem={renderItem}
-      flatListProps={flatListProps}
+      theme={theme}
     />
   );
 }
@@ -337,7 +337,6 @@ function CalendarListInner({
   // buildCalendarConfig because all its arguments flow through `tN === undefined
   // ? default : tN` conditional expressions (the compiler's own pattern for
   // defaulted props), which block cache slot generation.
-  // eslint-disable-next-line react-compiler/react-compiler
   const calendarProps = useMemo(
     () =>
       buildCalendarConfig(
