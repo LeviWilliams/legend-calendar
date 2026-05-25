@@ -3,7 +3,13 @@ import {
   type LegendListProps,
   type LegendListRef,
 } from "@legendapp/list/react-native";
-import { useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
@@ -76,7 +82,8 @@ function buildCalendarConfig(
   theme: CalendarMonthEnhanced["calendarProps"]["theme"],
   CalendarPressableComponent: CalendarMonthEnhanced["calendarProps"]["CalendarPressableComponent"]
 ): CalendarMonthEnhanced["calendarProps"] {
-  const calendarWeekHeaderHeight = calendarWeekHeaderHeightProp ?? calendarDayHeight;
+  const calendarWeekHeaderHeight =
+    calendarWeekHeaderHeightProp ?? calendarDayHeight;
   return {
     calendarColorScheme,
     calendarDayHeight,
@@ -198,13 +205,14 @@ export interface CalendarListRef {
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
 
-type CalendarListInnerProps = CalendarListProps &
-  { ref?: React.Ref<CalendarListRef> } & {
-    flatListProps: Omit<
-      LegendListProps<CalendarMonthEnhanced>,
-      "renderItem" | "data" | "children"
-    >;
-  };
+type CalendarListInnerProps = CalendarListProps & {
+  ref?: React.Ref<CalendarListRef>;
+} & {
+  flatListProps: Omit<
+    LegendListProps<CalendarMonthEnhanced>,
+    "renderItem" | "data" | "children"
+  >;
+};
 
 export function CalendarList(
   props: CalendarListProps & { ref?: React.Ref<CalendarListRef> }
@@ -314,7 +322,6 @@ function CalendarListInner({
   renderItem: customRenderItem,
   flatListProps,
 }: CalendarListInnerProps) {
-
   // Write directly to store to bypass the entire render cascade.
   // This means calendarProps stays stable and monthListWithCalendarProps
   // doesn't recompute on every date tap.
@@ -375,7 +382,8 @@ function CalendarListInner({
     ]
   );
 
-  const calendarWeekHeaderHeight = calendarWeekHeaderHeightProp ?? calendarDayHeight;
+  const calendarWeekHeaderHeight =
+    calendarWeekHeaderHeightProp ?? calendarDayHeight;
 
   const {
     initialMonthIndex,
