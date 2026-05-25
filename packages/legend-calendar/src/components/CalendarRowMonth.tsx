@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { memo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
@@ -34,7 +33,7 @@ export interface CalendarRowMonthProps {
   theme?: CalendarRowMonthTheme;
 }
 
-export const CalendarRowMonth = memo(function CalendarRowMonth({
+export const CalendarRowMonth = function CalendarRowMonth({
   children,
   height,
   theme,
@@ -52,4 +51,4 @@ export const CalendarRowMonth = memo(function CalendarRowMonth({
       <Text style={contentStyles}>{children}</Text>
     </View>
   );
-});
+};

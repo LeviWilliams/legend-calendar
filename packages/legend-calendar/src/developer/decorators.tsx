@@ -1,6 +1,6 @@
-import type { PropsWithChildren, ReactNode } from "react";
 import { StatusBar } from "expo-status-bar";
-import { memo, useMemo } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
+import { useMemo } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
 import { useTheme } from "@/hooks/useTheme";
@@ -28,7 +28,7 @@ export const paddingDecorator = (storyFn: () => ReactNode) => (
   <View style={styles.paddedContainer}>{storyFn()}</View>
 );
 
-const BackgroundStory = memo(({ children }: PropsWithChildren) => {
+const BackgroundStory = ({ children }: PropsWithChildren) => {
   const { colors } = useTheme();
   const containerStyles = useMemo<ViewStyle[]>(
     () => [
@@ -46,7 +46,7 @@ const BackgroundStory = memo(({ children }: PropsWithChildren) => {
       {children}
     </View>
   );
-});
+};
 BackgroundStory.displayName = "BackgroundStory";
 
 export const backgroundDecorator = (storyFn: () => ReactNode) => (

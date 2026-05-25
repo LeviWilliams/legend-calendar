@@ -1,4 +1,3 @@
-import { memo } from "react";
 import type { ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
@@ -18,11 +17,11 @@ export interface CalendarItemEmptyProps {
   };
 }
 
-export const CalendarItemEmpty = memo(function CalendarItemEmpty(
+export const CalendarItemEmpty = function CalendarItemEmpty(
   props: CalendarItemEmptyProps
 ) {
   const { height, theme } = props;
   const containerStyles = [{ ...styles.container, height }, theme?.container];
 
   return <View style={containerStyles} />;
-});
+};
