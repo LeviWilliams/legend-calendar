@@ -8,6 +8,7 @@ import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
+import { CalendarListConfigProvider } from "@/components/CalendarListConfigContext";
 import {
   fromDateId,
   getWeekOfMonth,
@@ -27,6 +28,29 @@ const LegendList = LegendListBase as <T>(
  * `Calendar` props to simplify building custom `Calendar` components.
  */
 export type CalendarMonthEnhanced = CalendarMonth & {
+  /**
+   * The calendar configuration props for this item. Available when using a
+   * custom `renderItem` for backwards compatibility.
+   *
+   * @deprecated Prefer reading calendar config from context via
+   * `useCalendarListConfig()` instead of spreading `item.calendarProps`.
+   * This avoids creating a new data array each render and lets LegendList
+   * skip unnecessary item re-renders.
+   *
+   * **Before (slower):**
+   * ```tsx
+   * renderItem={({ item }) => (
+   *   <MyCalendar calendarMonthId={item.id} {...item.calendarProps} />
+   * )}
+   * ```
+   *
+   * **After (faster):**
+   * ```tsx
+   * // Inside your custom calendar component:
+   * const listConfig = useCalendarListConfig();
+   * // Merge: { ...listConfig, ...props }
+   * ```
+   */
   calendarProps: Omit<CalendarProps, "calendarMonthId">;
 };
 
@@ -100,6 +124,12 @@ export interface CalendarListProps
    * - calendarAdditionalHeight
    * - calendarRowVerticalSpacing
    * - calendarSpacing
+   *
+   * **Performance tip**: Using `item.calendarProps` is provided for
+   * backwards compatibility but creates a new data array each render.
+   * For better performance, have your custom component call
+   * `useCalendarListConfig()` to read the shared config from context
+   * and only use `item.id` as `calendarMonthId`.
    */
   renderItem?: LegendListProps<CalendarMonthEnhanced>["renderItem"];
 }
@@ -168,6 +198,7 @@ export function CalendarList({
     getCalendarWeekDayFormat,
     onCalendarDayPress,
     CalendarPressableComponent,
+    renderItem: customRenderItem,
     ...flatListProps
   } = otherProps;
 
@@ -237,10 +268,15 @@ export function CalendarList({
     }
   }
 
-  const monthListWithCalendarProps = monthList.map((month) => ({
-    ...month,
-    calendarProps,
-  }));
+  // Only build the enhanced list when user provides a custom renderItem
+  // (backwards-compat path). Otherwise use plain monthList so the data
+  // identity stays stable and LegendList can skip item re-renders.
+  const listData = customRenderItem
+    ? monthList.map((month) => ({
+        ...month,
+        calendarProps,
+      }))
+    : (monthList as unknown as CalendarMonthEnhanced[]);
 
   const handleOnEndReached = (info: { distanceFromEnd: number }) => {
     appendMonths(calendarFutureScrollRangeInMonths);
@@ -331,7 +367,7 @@ export function CalendarList({
 
   const calendarContainerStyle = { paddingBottom: calendarSpacing };
 
-  const getFixedItemSize = (item: CalendarMonthEnhanced) => {
+  const getFixedItemSize = (item: CalendarMonth | CalendarMonthEnhanced) => {
     return getHeightForMonth({
       calendarMonth: item,
       calendarSpacing,
@@ -343,35 +379,37 @@ export function CalendarList({
     });
   };
 
+  // onCalendarDayPress is provided via CalendarListConfigContext at runtime,
+  // so we only need to pass calendarMonthId here.
   const handleRenderItem = ({ item }: { item: CalendarMonthEnhanced }) => (
     <View style={calendarContainerStyle}>
-      <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+      <Calendar
+        calendarMonthId={item.id}
+        onCalendarDayPress={onCalendarDayPress}
+      />
     </View>
   );
 
-  // Uncertain why but passing this as a no op resolved blanking issues after adding
-  // getFixedItemSize + recycleItems
-  const handleViewableItemsChanged = () => {};
-
   return (
-    <LegendList
-      data={monthListWithCalendarProps}
-      drawDistance={560}
-      estimatedItemSize={273}
-      getFixedItemSize={getFixedItemSize}
-      initialScrollIndex={computedInitialScrollIndex}
-      keyExtractor={keyExtractor}
-      maintainVisibleContentPosition
-      onEndReached={handleOnEndReached}
-      onStartReached={handleOnStartReached}
-      onViewableItemsChanged={handleViewableItemsChanged}
-      recycleItems
-      ref={legendListRef}
-      renderItem={handleRenderItem}
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      {...flatListProps}
-    />
+    <CalendarListConfigProvider value={calendarProps}>
+      <LegendList
+        data={listData}
+        drawDistance={560}
+        estimatedItemSize={273}
+        getFixedItemSize={getFixedItemSize}
+        initialScrollIndex={computedInitialScrollIndex}
+        keyExtractor={keyExtractor}
+        maintainVisibleContentPosition
+        onEndReached={handleOnEndReached}
+        onStartReached={handleOnStartReached}
+        recycleItems
+        ref={legendListRef}
+        renderItem={customRenderItem ?? handleRenderItem}
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        {...flatListProps}
+      />
+    </CalendarListConfigProvider>
   );
 }
 
