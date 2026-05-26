@@ -7,7 +7,7 @@ export const useRenderCount = (id?: string) => {
   const lastItemId = useRef(id);
 
   /**
-   * See more at: https://shopify.github.io/flash-list/docs/recycling
+   * See more at: https://legendapp.com/open-source/list/v3/performance/#recycling-list-items
    */
   if (lastItemId.current !== id) {
     lastItemId.current = id;

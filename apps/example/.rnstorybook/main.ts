@@ -1,7 +1,7 @@
 import { StorybookConfig } from "@storybook/react-native";
 import { resolve } from "path";
 
-const flashCalendarStories = resolve(
+const legendCalendarStories = resolve(
   __dirname,
   "../../../packages/legend-calendar/src/components/**/*.stories.?(ts|tsx|js|jsx)"
 );
@@ -12,7 +12,7 @@ const exampleStories = resolve(
 );
 
 const main: StorybookConfig = {
-  stories: [flashCalendarStories, exampleStories],
+  stories: [legendCalendarStories, exampleStories],
   addons: [
     "@storybook/addon-ondevice-controls",
     "@storybook/addon-ondevice-actions",

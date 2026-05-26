@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import type { ColorSchemeName, PressableProps } from "react-native";
 
-import { useCalendarListConfig } from "@/components/CalendarListConfigContext";
 import type {
   CalendarItemDayContainerProps,
   CalendarItemDayProps,
@@ -14,6 +13,7 @@ import type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
 import type { CalendarItemWeekNameProps } from "@/components/CalendarItemWeekName";
 import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
+import { useCalendarListConfig } from "@/components/CalendarListConfigContext";
 import type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
 import { CalendarRowMonth } from "@/components/CalendarRowMonth";
 import type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
@@ -212,16 +212,6 @@ export const Calendar = function Calendar(props: CalendarProps) {
       calendarInstanceId ?? "legend-calendar-default-instance",
       calendarActiveDateRanges
     );
-    /**
-     * While `calendarMonthId` is not used by the effect, we still need it in
-     * the dependency array since [LegendList uses recycling
-     * internally](https://legendapp.com/open-source/list/).
-     *
-     * This means `Calendar` can re-render with different props instead of
-     * getting re-mounted. Without it, we would see staled/invalid data, as
-     * reported by
-     * [#11](https://github.com/MarceloPrado/flash-calendar/issues/11).
-     */
   }, [calendarActiveDateRanges, calendarInstanceId, calendarMonthId]);
 
   return (
