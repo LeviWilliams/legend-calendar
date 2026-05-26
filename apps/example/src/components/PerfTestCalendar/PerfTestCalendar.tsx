@@ -114,16 +114,6 @@ export const PerfTestCalendar = memo(
         calendarMonthId,
         calendarActiveDateRanges ?? []
       );
-      /**
-       * While `calendarMonthId` is not used by the effect, we still need it in
-       * the dependency array since [LegendList uses recycling
-       * internally](https://www.legendapp.com/open-source/list/v2/performance/#recycling-list-items).
-       *
-       * This means `Calendar` can re-render with different props instead of
-       * getting re-mounted. Without it, we would see staled/invalid data, as
-       * reported by
-       * [#11](https://github.com/MarceloPrado/flash-calendar/issues/11).
-       */
     }, [calendarActiveDateRanges, calendarMonthId]);
 
     return (
