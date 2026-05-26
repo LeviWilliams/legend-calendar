@@ -14,6 +14,7 @@ An opinionated fork of Marcelo Prado's [flash-calendar](https://github.com/Marce
 - 🎨 Easy to customize and extend
 - 🗓️ Infinite scrollable calendar support
 - 📦 Tiny bundle size
+- ⚔️ Battle tested in production
 
 ## Documentation & Examples
 
