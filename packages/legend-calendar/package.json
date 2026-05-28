@@ -28,7 +28,7 @@
     "@babel/preset-typescript": "^7.28.5",
     "@lazerlen/eslint-config": "*",
     "@lazerlen/tsconfig": "*",
-    "@legendapp/list": "^3.0.0-beta.56",
+    "@legendapp/list": "^3.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/bun": "^1.3.2",
     "@types/react": "~19.1.10",
@@ -42,7 +42,7 @@
     "typescript": "~5.9.2"
   },
   "peerDependencies": {
-    "@legendapp/list": ">=3.0.0-beta.56",
+    "@legendapp/list": ">=3.0.0",
     "react": "*",
     "react-native": "*"
   }
