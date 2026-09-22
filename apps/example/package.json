@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@lazerlen/legend-calendar": "*",
+    "@legendapp/list": "^3.4.0",
     "date-fns": "^3.3.1",
     "expo": "~54.0.34",
     "expo-status-bar": "~3.0.9",

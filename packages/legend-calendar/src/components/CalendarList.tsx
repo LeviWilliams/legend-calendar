@@ -1,5 +1,5 @@
 import {
-  LegendList as LegendListBase,
+  LegendList,
   type LegendListProps,
   type LegendListRef,
 } from "@legendapp/list/react-native";
@@ -25,10 +25,6 @@ import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 import { activeDateRangesStore } from "@/hooks/useOptimizedDayMetadata";
 
-// Type assertion to make LegendList compatible with React 19
-const LegendList = LegendListBase as <T>(
-  props: LegendListProps<T> & { ref?: React.Ref<LegendListRef> }
-) => React.ReactElement;
 /**
  * Represents each `CalendarList` item. It's enhanced with the required
  * `Calendar` props to simplify building custom `Calendar` components.

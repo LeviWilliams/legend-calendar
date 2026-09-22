@@ -11,7 +11,7 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   format: ["cjs", "esm"],
-  external: ["react", "react-native", "react-native-web"],
+  external: ["react", "react-native", "react-native-web", "@legendapp/list"],
   minify: false,
   esbuildPlugins: [reactCompilerEsbuildPlugin({ filter: /\.[jt]sx?$/ })],
 });
