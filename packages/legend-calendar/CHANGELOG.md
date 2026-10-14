@@ -1,5 +1,11 @@
 # @lazerlen/legend-calendar
 
+## 1.8.0
+
+### Minor Changes
+
+- 7757c3a: Add `getCalendarDayTestID` to `Calendar` and `Calendar.List`, and a `testID` prop to `Calendar.Item.Day`, so day cells can be targeted by UI automation. The testID is forwarded to `CalendarPressableComponent`. Days have no testID unless one is provided.
+
 ## 1.6.1
 
 ### Patch Changes
