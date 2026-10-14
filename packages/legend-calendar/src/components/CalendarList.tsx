@@ -76,7 +76,8 @@ function buildCalendarConfig(
   getCalendarWeekDayFormat: CalendarMonthEnhanced["calendarProps"]["getCalendarWeekDayFormat"],
   onCalendarDayPress: CalendarMonthEnhanced["calendarProps"]["onCalendarDayPress"],
   theme: CalendarMonthEnhanced["calendarProps"]["theme"],
-  CalendarPressableComponent: CalendarMonthEnhanced["calendarProps"]["CalendarPressableComponent"]
+  CalendarPressableComponent: CalendarMonthEnhanced["calendarProps"]["CalendarPressableComponent"],
+  getCalendarDayTestID: CalendarMonthEnhanced["calendarProps"]["getCalendarDayTestID"]
 ): CalendarMonthEnhanced["calendarProps"] {
   const calendarWeekHeaderHeight =
     calendarWeekHeaderHeightProp ?? calendarDayHeight;
@@ -99,6 +100,7 @@ function buildCalendarConfig(
     onCalendarDayPress,
     theme,
     CalendarPressableComponent,
+    getCalendarDayTestID,
   };
 }
 
@@ -242,6 +244,7 @@ export function CalendarList(
     getCalendarWeekDayFormat,
     onCalendarDayPress,
     CalendarPressableComponent,
+    getCalendarDayTestID,
     renderItem,
     ...flatListProps
   } = props;
@@ -269,6 +272,7 @@ export function CalendarList(
       calendarWeekHeaderHeight={calendarWeekHeaderHeight}
       flatListProps={flatListProps}
       getCalendarDayFormat={getCalendarDayFormat}
+      getCalendarDayTestID={getCalendarDayTestID}
       getCalendarMonthFormat={getCalendarMonthFormat}
       getCalendarWeekDayFormat={getCalendarWeekDayFormat}
       onCalendarDayPress={onCalendarDayPress}
@@ -315,6 +319,7 @@ function CalendarListInner({
   getCalendarWeekDayFormat,
   onCalendarDayPress,
   CalendarPressableComponent,
+  getCalendarDayTestID,
   renderItem: customRenderItem,
   flatListProps,
 }: CalendarListInnerProps) {
@@ -353,7 +358,8 @@ function CalendarListInner({
         getCalendarWeekDayFormat,
         onCalendarDayPress,
         theme,
-        CalendarPressableComponent
+        CalendarPressableComponent,
+        getCalendarDayTestID
       ),
     [
       calendarColorScheme,
@@ -374,6 +380,7 @@ function CalendarListInner({
       onCalendarDayPress,
       theme,
       CalendarPressableComponent,
+      getCalendarDayTestID,
     ]
   );
 

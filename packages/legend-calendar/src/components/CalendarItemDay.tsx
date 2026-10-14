@@ -150,6 +150,8 @@ export interface CalendarItemDayProps {
   textProps?: Omit<CalendarTextProps, "children">;
   /** Optional component to replace the default <Pressable> component. */
   CalendarPressableComponent?: PressableLike;
+  /** Optional testID forwarded to the day's pressable. */
+  testID?: string;
 }
 
 /**
@@ -168,6 +170,7 @@ export const CalendarItemDay = function CalendarItemDay({
   metadata,
   textProps,
   CalendarPressableComponent = Pressable as PressableLike,
+  testID,
 }: CalendarItemDayProps) {
   const baseTheme = useTheme();
   const baseStyles = buildBaseStyles(baseTheme);
@@ -262,6 +265,7 @@ export const CalendarItemDay = function CalendarItemDay({
         }
         return mergedContainer;
       }}
+      testID={testID}
     >
       {({ pressed: isPressed, hovered: isHovered, focused: isFocused }) => {
         const params = {
@@ -419,6 +423,7 @@ export const CalendarItemDayWithContainer =
     containerTheme,
     calendarInstanceId,
     CalendarPressableComponent,
+    testID,
   }: CalendarItemDayWithContainerProps) {
     const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
 
@@ -440,6 +445,7 @@ export const CalendarItemDayWithContainer =
           height={dayHeight}
           metadata={metadata}
           onPress={onPress}
+          testID={testID}
           theme={theme}
         >
           {children}
