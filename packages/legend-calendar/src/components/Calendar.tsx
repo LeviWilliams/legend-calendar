@@ -27,7 +27,7 @@ import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesStore } from "@/hooks/useOptimizedDayMetadata";
 
 export type PressableLike = React.ComponentType<
-  Pick<PressableProps, "children" | "style" | "disabled"> & {
+  Pick<PressableProps, "children" | "style" | "disabled" | "testID"> & {
     onPress: () => void;
   }
 >;
@@ -104,6 +104,14 @@ export interface CalendarProps extends UseCalendarParams {
   theme?: CalendarTheme;
   /** Optional component to replace the default <Pressable> component. */
   CalendarPressableComponent?: PressableLike;
+  /**
+   * Returns the testID for each day cell, given its date ID (`YYYY-MM-DD`).
+   * Days have no testID unless this is provided.
+   *
+   * Keep this function stable (declared outside the component or memoized),
+   * like the date formatting functions.
+   */
+  getCalendarDayTestID?: (dateId: string) => string | undefined;
 }
 
 const BaseCalendar = function BaseCalendar(props: CalendarProps) {
@@ -117,6 +125,7 @@ const BaseCalendar = function BaseCalendar(props: CalendarProps) {
     onCalendarDayPress,
     theme,
     CalendarPressableComponent,
+    getCalendarDayTestID,
     ...buildCalendarParams
   } = props;
 
@@ -176,6 +185,7 @@ const BaseCalendar = function BaseCalendar(props: CalendarProps) {
                 key={dayProps.id}
                 metadata={dayProps}
                 onPress={onCalendarDayPress}
+                testID={getCalendarDayTestID?.(dayProps.id)}
                 theme={theme?.itemDay}
               >
                 {dayProps.displayLabel}

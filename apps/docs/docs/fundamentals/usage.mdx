@@ -442,3 +442,32 @@ export const TwoCalendarsMounted = () => {
 <Image img={twoCalendarsMounted} width={250} />
 
 </HStack>
+
+## Test IDs
+
+Day cells have no `testID` by default. To target them from UI automation
+(Detox, Maestro, Appium, etc.), pass `getCalendarDayTestID`. It receives each
+day's date ID (`YYYY-MM-DD`) and works for both `Calendar` and `Calendar.List`:
+
+```tsx
+import { Calendar } from "@lazerlen/legend-calendar";
+
+// Keep it stable, like the date formatting functions
+const getCalendarDayTestID = (dateId: string) => `calendar-day-${dateId}`;
+
+export const CalendarWithTestIDs = () => {
+  return (
+    <Calendar.List
+      getCalendarDayTestID={getCalendarDayTestID}
+      onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+    />
+  );
+};
+```
+
+The testID is forwarded to the day's pressable, including a custom
+`CalendarPressableComponent`. When building a custom calendar with
+`Calendar.Item.Day`, pass `testID` to it directly.
+
+Since `Calendar.List` is virtualized, only months near the visible area are
+rendered. Scroll to a month (e.g. with `scrollToMonth`) before querying its days.
